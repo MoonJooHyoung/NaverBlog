@@ -40,6 +40,16 @@ class DelayManager:
         time.sleep(delay)
         logger.debug(f"딜레이 적용: {delay:.2f}초")
     
+    def delay(self, custom_delay: Optional[float] = None):
+        """대기 시간 적용 (wait의 별칭)"""
+        self.wait(custom_delay)
+    
+    def delay_range(self, min_delay: float, max_delay: float):
+        """범위 딜레이 적용"""
+        delay = random.uniform(min_delay, max_delay)
+        time.sleep(delay)
+        logger.debug(f"범위 딜레이 적용: {delay:.2f}초")
+    
     def short_wait(self):
         """짧은 대기 (0.5~1.5초)"""
         delay = random.uniform(0.5, 1.5) if self.random_delay else 0.5

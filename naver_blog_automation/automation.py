@@ -190,7 +190,11 @@ class NaverBlogAutomation:
                 if post_url:
                     logger.info(f"포스팅 URL: {post_url}")
                     
-                    # 9. 댓글 자동 답변 처리 (설정되어 있는 경우)
+                    # 9. 링크 DB에 포스팅 추가 (내부 링크 기능을 위해)
+                    if posting_config.get("auto_internal_links", True):
+                        self.link_manager.add_post_to_db(optimized_title, post_url, content)
+                    
+                    # 10. 댓글 자동 답변 처리 (설정되어 있는 경우)
                     comment_config = self.config.get("comment_auto_reply", {})
                     if comment_config.get("enabled", False):
                         logger.info("댓글 자동 답변 처리 시작...")
@@ -241,7 +245,7 @@ class NaverBlogAutomation:
                     total_replied += replied_count
                     
                     # 다음 포스팅 처리 전 딜레이
-                    time.sleep(5)
+                    time.sleep(5)  # 스케줄러와 독립적으로 실행되므로 time.sleep 사용
                     
                 except Exception as e:
                     logger.error(f"포스팅 댓글 처리 오류 ({post_url}): {e}")

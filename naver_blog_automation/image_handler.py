@@ -36,8 +36,8 @@ class ImageHandler:
         images = []
         
         try:
-            # Unsplash API를 사용한 이미지 검색 (예시)
-            # 실제로는 다양한 이미지 소스 활용 가능
+            # Unsplash API를 사용한 이미지 검색
+            # 다양한 이미지 소스 활용 가능
             image_count = min(max_images, content_length // CONTENT_LENGTH_PER_IMAGE)
             for i in range(image_count):
                 image_url = self._search_image(topic, i)
@@ -51,10 +51,10 @@ class ImageHandler:
         return images
     
     def _search_image(self, topic: str, index: int) -> Optional[str]:
-        """이미지 검색 (예시: Unsplash 사용)"""
+        """이미지 검색 (Unsplash 사용)"""
         try:
-            # 실제로는 다양한 이미지 API 활용 가능
-            # 여기서는 예시로 Unsplash 사용
+            # 다양한 이미지 API 활용 가능
+            # 현재는 Unsplash 사용
             safe_topic = topic.replace(' ', ',')
             unsplash_url = f"https://source.unsplash.com/800x600/?{safe_topic}"
             return unsplash_url

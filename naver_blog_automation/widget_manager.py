@@ -22,7 +22,7 @@ class WidgetManager:
             # 소셜 공유 버튼
             content = self._add_social_share_buttons(content)
             
-            # 언론사 배지 (예시)
+            # 언론사 배지
             content = self._add_media_badge(content)
             
             return content
@@ -43,7 +43,7 @@ class WidgetManager:
         return content + "\n\n" + buttons_html
     
     def _add_media_badge(self, content: str) -> str:
-        """언론사 배지 추가 (예시)"""
+        """언론사 배지 추가"""
         badge_html = """
 <div style="text-align: center; margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 10px;">
     <p style="margin: 0; font-size: 14px; color: #666;">📰 언론 보도 자료</p>

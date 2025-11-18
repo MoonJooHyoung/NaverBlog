@@ -62,7 +62,7 @@ class CommentManager:
         try:
             logger.info(f"댓글 확인 중: {post_url}")
             self.driver.get(post_url)
-            self.delay_manager.delay()
+            self.delay_manager.wait()
             
             # 댓글 영역 로딩 대기
             try:
@@ -183,7 +183,7 @@ class CommentManager:
         
         Args:
             comment_content: 댓글 내용
-            post_title: 포스팅 제목 (선택적)
+            post_title: 포스팅 제목
             
         Returns:
             생성된 답변 내용
@@ -195,7 +195,7 @@ class CommentManager:
         
         Args:
             comment_content: 댓글 내용
-            post_title: 포스팅 제목 (선택적)
+            post_title: 포스팅 제목
             
         Returns:
             생성된 답변 내용
@@ -248,7 +248,7 @@ class CommentManager:
         try:
             logger.info(f"댓글 답변 작성 중: {comment_id}")
             self.driver.get(post_url)
-            self.delay_manager.delay()
+            self.delay_manager.wait()
             
             # 댓글 영역 로딩 대기
             try:
@@ -290,7 +290,7 @@ class CommentManager:
             
             if reply_button:
                 reply_button.click()
-                self.delay_manager.delay()
+                self.delay_manager.wait()
             
             # 답변 입력 필드 찾기
             reply_input_selectors = [
@@ -318,7 +318,7 @@ class CommentManager:
             # 답변 입력
             reply_input.clear()
             reply_input.send_keys(reply_text)
-            self.delay_manager.delay()
+            self.delay_manager.wait()
             
             # 등록 버튼 클릭
             submit_selectors = [
@@ -332,7 +332,7 @@ class CommentManager:
                     submit_btn = reply_input.find_element(By.XPATH, "./ancestor::form//button | ./ancestor::div//button")
                     if submit_btn:
                         submit_btn.click()
-                        self.delay_manager.delay()
+                        self.delay_manager.wait()
                         logger.info("✅ 댓글 답변 작성 완료")
                         return True
                 except:
@@ -376,7 +376,7 @@ class CommentManager:
                         replied_count += 1
                         logger.info(f"✅ 댓글 답변 완료: {comment['author']}")
                         # 다음 댓글 처리 전 딜레이
-                        self.delay_manager.delay(3, 5)
+                        self.delay_manager.delay_range(3, 5)
                     else:
                         logger.warning(f"❌ 댓글 답변 실패: {comment['author']}")
                 

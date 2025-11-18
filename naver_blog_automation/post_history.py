@@ -58,6 +58,10 @@ class PostHistory:
         
         return post_data
     
+    def get_all_posts(self) -> List[Dict]:
+        """모든 포스팅 조회"""
+        return self.history
+    
     def get_recent_posts(self, limit: int = 10) -> List[Dict]:
         """최근 포스팅 조회"""
         return self.history[-limit:] if len(self.history) > limit else self.history
