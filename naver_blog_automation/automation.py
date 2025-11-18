@@ -19,6 +19,7 @@ from .widget_manager import WidgetManager
 from .poster import BlogPoster
 from .scheduler import PostScheduler
 from .post_history import PostHistory
+from .comment_manager import CommentManager
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ class NaverBlogAutomation:
         self.poster = None
         self.scheduler = None
         self.post_history = None
+        self.comment_manager = None
         
         self._initialize_components()
     
@@ -65,6 +67,7 @@ class NaverBlogAutomation:
         self.poster = BlogPoster(self.driver, self.config)
         self.scheduler = PostScheduler(self.config)
         self.post_history = PostHistory()
+        self.comment_manager = CommentManager(self.driver, self.config)
         
         logger.info("✅ 컴포넌트 초기화 완료")
     
@@ -186,11 +189,70 @@ class NaverBlogAutomation:
                 logger.info("✅ 포스팅 성공!")
                 if post_url:
                     logger.info(f"포스팅 URL: {post_url}")
+                    
+                    # 9. 댓글 자동 답변 처리 (설정되어 있는 경우)
+                    comment_config = self.config.get("comment_auto_reply", {})
+                    if comment_config.get("enabled", False):
+                        logger.info("댓글 자동 답변 처리 시작...")
+                        replied_count = self.comment_manager.process_comments(post_url, optimized_title)
+                        if replied_count > 0:
+                            logger.info(f"✅ {replied_count}개의 댓글에 자동 답변 완료")
             else:
                 logger.error("❌ 포스팅 실패")
                 
         except Exception as e:
             logger.error(f"포스팅 중 오류 발생: {e}", exc_info=True)
+    
+    def process_all_comments(self, post_urls: Optional[List[str]] = None) -> int:
+        """모든 포스팅의 댓글 처리 (댓글 자동 답변)
+        
+        Args:
+            post_urls: 처리할 포스팅 URL 리스트. None이면 히스토리에서 모든 포스팅 가져옴
+            
+        Returns:
+            총 답변한 댓글 개수
+        """
+        if not self.config.get("comment_auto_reply", {}).get("enabled", False):
+            logger.warning("댓글 자동 답변이 비활성화되어 있습니다. config.json에서 'comment_auto_reply.enabled'를 true로 설정하세요.")
+            return 0
+        
+        try:
+            if post_urls is None:
+                # 히스토리에서 모든 포스팅 URL 가져오기
+                history = self.post_history.get_all_posts()
+                post_urls = [post["url"] for post in history if post.get("url") and post.get("success")]
+            
+            if not post_urls:
+                logger.info("처리할 포스팅이 없습니다")
+                return 0
+            
+            total_replied = 0
+            for post_url in post_urls:
+                try:
+                    # 포스팅 제목 가져오기 (히스토리에서)
+                    history = self.post_history.get_all_posts()
+                    post_title = ""
+                    for post in history:
+                        if post.get("url") == post_url:
+                            post_title = post.get("title", "")
+                            break
+                    
+                    replied_count = self.comment_manager.process_comments(post_url, post_title)
+                    total_replied += replied_count
+                    
+                    # 다음 포스팅 처리 전 딜레이
+                    time.sleep(5)
+                    
+                except Exception as e:
+                    logger.error(f"포스팅 댓글 처리 오류 ({post_url}): {e}")
+                    continue
+            
+            logger.info(f"✅ 총 {total_replied}개의 댓글에 자동 답변 완료")
+            return total_replied
+            
+        except Exception as e:
+            logger.error(f"댓글 처리 중 오류: {e}")
+            return 0
     
     def close(self):
         """리소스 정리"""

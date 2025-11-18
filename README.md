@@ -51,6 +51,13 @@
 - 포스팅 URL 자동 추출 및 저장
 - 랜덤 딜레이로 자연스러운 동작
 
+### 8. 댓글 자동 답변 ⭐ (NEW)
+- AI 기반 댓글 자동 답변 생성
+- 스팸 댓글 자동 필터링
+- 답변 톤 설정 가능 (친절하고 정중한, 캐주얼한 등)
+- 답변 길이 제한 설정
+- 포스팅 후 자동 처리 또는 수동 실행 가능
+
 ## 설치 방법
 
 ```bash
@@ -91,10 +98,58 @@ export NAVER_PASSWORD="your_naver_password"
 
 환경변수가 설정되어 있으면 `config.json`의 값보다 우선적으로 사용됩니다.
 
+### 댓글 자동 답변 설정
+
+`config.json`에서 댓글 자동 답변 기능을 활성화할 수 있습니다:
+
+```json
+{
+  "comment_auto_reply": {
+    "enabled": true,
+    "reply_tone": "친절하고 정중한",
+    "max_reply_length": 200,
+    "skip_keywords": ["광고", "홍보", "스팸", "링크", "사이트"]
+  }
+}
+```
+
+- `enabled`: 댓글 자동 답변 활성화 여부 (true/false)
+- `reply_tone`: 답변 톤 설정 (예: "친절하고 정중한", "캐주얼한", "전문적인")
+- `max_reply_length`: 최대 답변 길이 (자)
+- `skip_keywords`: 해당 키워드가 포함된 댓글은 자동으로 건너뜀
+
 ## 사용 방법
+
+### 기본 사용 (자동 포스팅)
 
 ```bash
 python main.py
+```
+
+### 댓글 자동 답변만 실행
+
+Python 코드에서 직접 호출:
+
+```python
+from naver_blog_automation.automation import NaverBlogAutomation
+import json
+
+# 설정 파일 로드
+with open('config.json', 'r', encoding='utf-8') as f:
+    config = json.load(f)
+
+# 자동화 객체 생성
+automation = NaverBlogAutomation(config)
+
+# 로그인
+if automation.login():
+    # 모든 포스팅의 댓글 처리
+    automation.process_all_comments()
+    
+    # 또는 특정 포스팅만 처리
+    # automation.process_all_comments(["https://blog.naver.com/your_blog_id/123456"])
+    
+    automation.close()
 ```
 
 ## 주의사항
@@ -113,24 +168,36 @@ python main.py
 4. **설정 검증**: 시작 전 설정 파일 유효성 검사
 5. **URL 추출**: 포스팅 성공 후 자동으로 URL 추출 및 저장
 6. **네이버 블로그 특화**: 공개/비공개, 댓글, 예약 발행, 썸네일 설정
+7. **댓글 자동 답변**: AI 기반 댓글 자동 답변 기능 구현
 
-## 추가 추천 기능
+## 최신 기능
 
-### 8. 통계 및 분석
-- 포스팅 조회수 추적
-- 인기 키워드 분석
-- 최적 포스팅 시간 분석
+### 댓글 자동 답변 시스템 (v1.1.0)
 
-### 9. 콘텐츠 큐레이션
-- 트렌드 키워드 자동 수집
-- 경쟁 블로그 분석
-- 콘텐츠 아이디어 생성
+AI 기반 댓글 자동 답변 기능이 추가되었습니다. 블로그 운영 시간을 절약하고 독자와의 소통을 자동화할 수 있습니다.
 
-### 10. 자동 댓글 관리
-- 댓글 자동 답변 (선택적)
-- 스팸 댓글 필터링
+#### 주요 특징
 
-### 11. 백업 및 복구
-- 포스팅 자동 백업
-- 설정 파일 백업
+- **AI 기반 답변 생성**: OpenAI GPT를 활용하여 댓글 내용에 맞는 자연스러운 답변 자동 생성
+- **스팸 댓글 필터링**: 설정한 키워드가 포함된 댓글은 자동으로 건너뛰기
+- **커스터마이징 가능**: 답변 톤, 길이, 필터링 키워드 등 자유롭게 설정
+- **자동/수동 실행**: 포스팅 후 자동 처리 또는 별도 실행 가능
+- **중복 답변 방지**: 이미 답변이 있는 댓글은 자동으로 건너뛰기
+
+#### 사용 예시
+
+```python
+# 댓글 답변 테스트
+python test_comment_reply.py
+
+# 특정 포스팅의 댓글만 처리
+automation.process_all_comments(["https://blog.naver.com/your_blog_id/123456"])
+```
+
+#### 설정 옵션
+
+- `enabled`: 기능 활성화/비활성화
+- `reply_tone`: 답변 톤 설정 ("친절하고 정중한", "캐주얼한", "전문적인" 등)
+- `max_reply_length`: 최대 답변 길이 (기본값: 200자)
+- `skip_keywords`: 스팸 필터링 키워드 리스트
 

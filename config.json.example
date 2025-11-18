@@ -45,6 +45,12 @@
     "headless_mode": false,
     "delay_between_actions": 2,
     "random_delay": true
+  },
+  "comment_auto_reply": {
+    "enabled": false,
+    "reply_tone": "친절하고 정중한",
+    "max_reply_length": 200,
+    "skip_keywords": ["광고", "홍보", "스팸", "링크", "사이트"]
   }
 }
 
