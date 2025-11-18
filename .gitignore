@@ -1,0 +1,45 @@
+# 설정 파일
+config.json
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# 로그 파일
+*.log
+logs/
+
+# 이미지 캐시
+images_cache/
+downloaded_images/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Selenium
+chromedriver
+geckodriver
+*.crx
+
+# 데이터베이스
+*.db
+*.sqlite
+links_database.json
+
