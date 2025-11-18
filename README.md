@@ -68,7 +68,15 @@ pip install -r requirements.txt
    - OpenAI API 키 입력 (원고 생성용)
    - 블로그 URL 입력
 
-### 방법 2: 환경변수 사용 (보안 강화)
+### 방법 2: 대화형 설정 도우미 사용 (선택사항)
+
+설정을 쉽게 할 수 있는 도우미 스크립트도 제공합니다:
+
+```bash
+python setup_config.py
+```
+
+### 방법 3: 환경변수 사용 (보안 강화)
 
 비밀번호를 환경변수로 설정하여 보안을 강화할 수 있습니다:
 
@@ -92,9 +100,31 @@ export NAVER_PASSWORD="your_naver_password"
 
 환경변수가 설정되어 있으면 `config.json`의 값보다 우선적으로 사용됩니다.
 
-### 댓글 자동 답변 설정
+### 주요 설정 위치
 
-`config.json`에서 댓글 자동 답변 기능을 활성화할 수 있습니다:
+**스케줄러 설정** (매일 자동 포스팅):
+```json
+{
+  "scheduler": {
+    "enabled": true,  // true: 매일 자동 포스팅, false: 즉시 포스팅
+    "default_posting_times": ["09:00", "14:00", "20:00"]  // 포스팅 시간
+  }
+}
+```
+
+**포스팅 설정**:
+```json
+{
+  "posting": {
+    "default_category": "일반",  // 기본 카테고리
+    "max_posts_per_day": 5,  // 하루 최대 포스팅 수
+    "is_public": true,  // 공개/비공개
+    "allow_comments": true  // 댓글 허용 여부
+  }
+}
+```
+
+**댓글 자동 답변 설정**:
 
 ```json
 {
